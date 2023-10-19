@@ -1,0 +1,209 @@
+<%- include('templates/user/user_header') %>
+<%- include('templates/user/user_nav') %>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="overflow: auto;">
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="/user/showUsers"><i class="fa-solid fa-users"></i> <span class="menu-item">Usuarios activos</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="/user/showUsersDeleted"><i class="fa-solid fa-user-large-slash"></i> <span class="menu-item">Usuarios inactivos</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact/showContacts"><i class="fa-solid fa-user-plus"></i> <span class="menu-item">Nuevas solicitudes</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="/contact/showContactsAttended"><i class="fa-solid fa-address-book"></i> <span class="menu-item">Lista de contactos</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/updateProfileInfo"><i class="fa-solid fa-key"></i> <span class="menu-item">Cambiar contraseña</span></a>
+          </li>
+        </ul>
+      </div>
+      <div style="height: 5.5rem; width: 100%;"></div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <h2 style="text-align: center; padding-top: 25px;">
+        Modificar datos de usuario
+      </h2>
+      <% 
+        if(error.length>0) {
+          error.forEach((text)=>{
+      %>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <%= text %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% 
+          });
+        } 
+      %>
+      <div class="cards-responsive">
+        <div style="height: 20px; width: 100%;"></div>
+        <!---->
+        <div class="row edited-form" style="height: 100%;">
+          <div class="col-9">
+            <!---->
+            <div class="card" style="background: rgba(61, 59, 59, 0.081); border: none;">
+              <div class="card-body">
+                <form class="card-body" method="post" action="/user/updateUser">
+                  <input type="hidden" name="id" value="<%= User._id %>" readonly>
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6" style="margin-top: 20px;">
+                      <input type="text" class="form-control form-input" name="name" value="<%= User.name %>" placeholder="Nombre(s)" required>
+                    </div>
+                    <div class="col-sm-12 col-md-6" style="margin-top: 20px;">
+                      <input type="text" class="form-control form-input" name="lastName" value="<%= User.lastName %>" placeholder="Apellidos" required>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6" style="margin-top: 20px;">
+                      <input type="text" class="form-control form-input" name="email" value="<%= User.email %>" placeholder="correo@ejemplo.com" required>
+                    </div>
+                    <div class="col-sm-12 col-md-6" style="margin-top: 20px;">
+                      <input type="text" class="form-control form-input" name="phone" value="<%= User.phone %>" placeholder="Teléfono" required>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12"></div>
+                    <label class="form-label" style="margin-left: 10px; position: relative; top: 20px">Fecha de nacimiento</label>
+                    <% 
+                      date=new Date(User.birthDate); 
+                      day=date.getUTCDate(); 
+                      month=date.getUTCMonth();
+                      year=date.getUTCFullYear(); 
+                    %>
+                      <div class="col-md-4 col-sm-6" style="margin-top: 20px;">
+                        <select name="birthDay" class="form-select form-input" required>
+                          <option disabled value="">Día</option>
+                          <option selected value="<%= day %>"> <%= day %> </option>
+                          <% days.forEach(day=>{ %>
+                            <option value="<%= day %>"> <%= day %> </option>
+                          <% }); %>
+                        </select>
+                        <div class="invalid-feedback">
+                          Por favor introduzca una opción válida.
+                        </div>
+                      </div>
+                      <div class="col-md-4 col-sm-6" style="margin-top: 20px;">
+                        <select name="birthMonth" class="form-select form-input" required>
+                          <option disabled value="">Mes</option>
+                          <option selected value="<%= month+1 %>"> <%= namedMonths[month] %> </option>
+                          <% months.forEach(month=>{ %>
+                            <option value="<%= month+1 %>"> <%= namedMonths[month-1] %> </option>
+                          <% }); %>
+                        </select>
+                        <div class="invalid-feedback">
+                          Por favor introduzca una opción válida.
+                        </div>
+                      </div>
+                      <!--<div class="space"></div>-->
+                      <div class="col-md-4 col-sm-6" style="margin-top: 20px;">
+                        <select name="birthYear" class="form-select form-input" required>
+                          <option disabled value="">Año</option>
+                          <option selected value="<%= year %>"> <%= year %> </option>
+                          <% years.forEach(year=>{ %>
+                            <option value="<%= year %>"> <%= year %> </option>
+                          <% }); %>
+                        </select>
+                        <div class="invalid-feedback">
+                          Por favor introduzca una opción válida.
+                        </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12"></div>
+                    <label class="form-label" style="margin-left: 10px; position: relative; top: 20px">Fecha de ingreso</label>
+                    <% 
+                      date=new Date(User.admissionDate); 
+                      day=date.getUTCDate(); 
+                      month=date.getUTCMonth();
+                      year=date.getUTCFullYear();
+                    %>
+                      <div class="col-md-4 col-sm-6" style="margin-top: 20px;">
+                        <select name="admissionDay" class="form-select form-input" required>
+                          <option disabled value="">Día</option>
+                          <option selected value="<%= day %>"> <%= day %> </option>
+                          <% days.forEach(day=>{ %>
+                            <option value="<%= day %>"> <%= day %> </option>
+                          <% }); %>
+                        </select>
+                        <div class="invalid-feedback">
+                          Por favor introduzca una opción válida.
+                        </div>
+                      </div>
+                      <div class="col-md-4 col-sm-6" style="margin-top: 20px;">
+                        <select name="admissionMonth" class="form-select form-input" required>
+                          <option disabled value="">Mes</option>
+                          <option selected value="<%= month+1 %>"> <%= namedMonths[month] %> </option>
+                          <% months.forEach(month=>{ %>
+                            <option value="<%= month+1 %>"> <%= namedMonths[month-1] %> </option>
+                          <% }); %>
+                        </select>
+                        <div class="invalid-feedback">
+                          Por favor introduzca una opción válida.
+                        </div>
+                      </div>
+                      <div class="col-md-4 col-sm-6" style="margin-top: 20px;">
+                        <select name="admissionYear" class="form-select form-input" required>
+                          <option disabled value="">Año</option>
+                          <option selected value="<%= year %>"> <%= year %> </option>
+                          <% years.forEach(year=>{ %>
+                            <option value="<%= year %>"> <%= year %> </option>
+                          <% }); %>
+                        </select>
+                        <div class="invalid-feedback">
+                          Por favor introduzca una opción válida.
+                        </div>
+                      </div>
+                  </div>
+                  <div class="row" style="margin-top: 20px;">
+                    <div class="col-sm-8" style="margin-top: 20px;">
+                      <textarea class="form-control form-input" name="objective" placeholder="Objetivo en Dizenco" style="overflow:auto;" required><%= User.objective %></textarea>
+                    </div>
+                    <div class="col-sm-4" style="margin-top: 20px;">
+                      <label class="form-label">¿Es administrador?</label>
+                      <div class="row">
+                        <% if(User.role) { %>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="radioBtn" value="true" style="box-shadow: 6px 6px 10px 0 #a22; border: none" checked required>
+                            <label class="form-check-label" for="inlineRadio1" style="margin-left: 3px;">Sí</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="radioBtn" value="false" style="box-shadow: 6px 6px 10px 0 #a22; border: none" required>
+                            <label class="form-check-label" for="inlineRadio2" style="margin-left: 3px;">No</label>
+                          </div>
+                        <% } else { %>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="radioBtn" value="true" style="box-shadow: 6px 6px 10px 0 #a22; border: none" required>
+                              <label class="form-check-label" for="inlineRadio1" style="margin-left: 3px;">Sí</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="radioBtn" value="false" style="box-shadow: 6px 6px 10px 0 #a22; border: none" checked required>
+                              <label class="form-check-label" for="inlineRadio2" style="margin-left: 3px;">No</label>
+                            </div>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-button-container" style="margin-top: 30px;">
+                    <button type="submit" class="btn my-button"> Guardar </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!---->
+          </div>
+        </div>
+        <!---->
+      </div>
+      <div style="height: 80px; width: 100%;"></div>
+    </main>
+  </div>
+</div>
+
+<%- include('templates/user/user_footer') %>

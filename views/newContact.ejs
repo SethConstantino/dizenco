@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Contacto - Dizenco</title>
+    <link rel="shortcut icon" href="/static/images/cropped-logo_dizenco_circle-192x192.png" type="image/x-icon">
+    <link href="/static/css/user/user_bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/user/user_dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+
+<header class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow" style="background-color: #c20101;">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="https://dizenco.com.mx/">
+      <img src="/static/images/dizenco_logo.png" alt="dizenco_logo.png">
+  </a>
+  <div class="sapace-box"></div>
+</header>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <main class="">
+      <h2 style="text-align: center; padding-top: 25px;">
+        Contacto
+      </h2>
+      <div class="cards-responsive">
+        <!---->
+        <div class="row edited-form" style="height: 100%;">
+          <div class="col-10">
+            <!---->
+            <div class="card" style="border: none;">
+              <div class="card-body">
+                <form class="card-body" method="post" action="/contact/newContact">
+                <!--Row 1-->
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6" style="margin-top: 25px;">
+                      <label class="form-label"><strong>Nombre</strong></label> 
+                      <input type="text" class="form-control form-input" name="name" placeholder="Nombre(s)" required>
+                    </div>
+                    <div class="col-sm-12 col-md-6" style="margin-top: 25px;">
+                      <label class="form-label"><strong>Correo</strong></label>
+                      <input type="email" class="form-control form-input" name="email" placeholder="correo@ejemplo.com" required>
+                    </div>
+                    <div class="col-sm-12 col-md-6" style="margin-top: 25px;">
+                      <label class="form-label"><strong>Teléfono</strong></label>
+                      <input type="text" class="form-control form-input" name="phone" placeholder="Teléfono" required>
+                    </div>
+                    <div class="col-sm-12 col-md-6" style="margin-top: 25px;">
+                      <label class="form-label"><strong>Empresa</strong></label>
+                      <input type="text" class="form-control form-input" name="company" placeholder="Empresa" required>
+                    </div>
+                    <div class="col-sm-12 col-md-6" style="margin-top: 25px;">
+                      <label class="form-label"><strong>Estado</strong></label>
+                      <input type="text" class="form-control form-input" name="state" placeholder="Estado" required>
+                    </div>
+                    <div class="col-sm-12 col-md-6" style="margin-top: 25px;">
+                      <label class="form-label"><strong>Canal de distribución</strong></label>
+                      <select name="distributionChannel" class="form-select form-input-2" required>
+                        <option selected disabled value="">Canal</option>
+                        <% 
+                          channels=["Distribución por mayoreo", "Tienda de cadena o conveniencia", "Distribución horizontal"]
+                          channels.forEach(channel=>{ 
+                        %>
+                          <option value="<%= channel %>"><%= channel %></option>
+                        <% 
+                          }); 
+                        %>
+                      </select>
+                      <div class="invalid-feedback">
+                        Por favor introduzca una opción válida.
+                      </div>
+                    </div>
+                  </div>
+                <!--Row 1-->
+
+                <!--Row 2-->
+                  <div class="row" style="margin-top: 25px;">
+                    <label class="form-label"><strong>Mensaje</strong></label> 
+                    <div class="col-sm-12 col-md-8">
+                      <textarea class="form-control form-input" name="text" placeholder="Escribenos un mensaje" style="overflow:auto;" required></textarea>
+                    </div>
+                  </div>
+                <!--Row 2-->
+
+                <!--Row 3-->
+                  <div class="row">
+                      <label class="form-label" style="margin-top: 25px;"><strong>Marcas de interés</strong></label>
+                      <%
+                        function products(familyName, position){
+                          Family.brands[position].forEach((product, k)=>{
+                            if(k==Family.brands[position].length-1) {
+                      %>
+                        <input type="checkbox" name="<%= familyName %>[]" value="<%= product %>" class="form-check-input" style="box-shadow: 6px 6px 10px 0 #a22; border: none;">⠀<%= product %> <br><br>
+                      <% } else { %>
+                        <input type="checkbox" name="<%= familyName %>[]" value="<%= product %>" class="form-check-input" style="box-shadow: 6px 6px 10px 0 #a22; border: none;">⠀<%= product %> <br>
+                      <%
+                            }
+                          })
+                        }
+                          Family.families.forEach((familyName, i)=>{
+                      %>
+                        <div class="col-md-2 col-sm-6" >
+                          <label for="<%= familyName %>[]"> <strong><%= Family.familyNames[i] %>:</strong></label><br>
+                          <input type="hidden" name="<%= familyName %>[]" value="<%= Family.familyNames[i] %>">
+                          <% products(familyName, i) %>
+                        </div>
+                      <%
+                          });
+                      %>
+                  </div>
+                <!--Row 3-->
+                  
+                  <div class="modal-button-container" style="margin-top: 10px;">
+                    <button type="submit" class="btn my-button"> Registrar </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!---->
+          </div>
+        </div>
+        <!---->
+      </div>
+      <div style="height: 80px; width: 100%;"></div>
+    </main>
+  </div>
+</div>
+
+<%- include('templates/user/user_footer') %>

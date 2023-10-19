@@ -1,0 +1,177 @@
+<%- include('templates/user/user_header') %>
+<%- include('templates/user/user_nav') %>
+<% var status = (Status) ? "Nuevas solicitudes" : "Lista de contactos" %>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="overflow: auto;">
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          <% if(Role) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/showUsers"><i class="fa-solid fa-users"></i> <span class="menu-item">Usuarios activos</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/showUsersDeleted"><i class="fa-solid fa-user-large-slash"></i> <span class="menu-item">Usuarios inactivos</span></a>
+          </li>
+          <% } if(Status) { %>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contact/showContacts"><i class="fa-solid fa-user-plus"></i> <span class="menu-item">Nuevas solicitudes</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact/showContactsAttended"><i class="fa-solid fa-address-book"></i> <span class="menu-item">Lista de contactos</span></a>
+            </li>
+          <% } else { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact/showContacts"><i class="fa-solid fa-user-plus"></i> <span class="menu-item">Nuevas solicitudes</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contact/showContactsAttended"><i class="fa-solid fa-address-book"></i> <span class="menu-item">Lista de contactos</span></a>
+            </li>
+          <% } %>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/updateProfileInfo"><i class="fa-solid fa-key"></i> <span class="menu-item">Cambiar contraseña</span></a>
+          </li>
+        </ul>
+      </div>
+      <div style="height: 5.5rem; width: 100%;"></div>
+    </nav>
+
+    <!--Main-->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <!--Título de página-->
+      <h2 style="text-align: center; padding-top: 25px;">
+        <%= status %>
+      </h2>
+      <!--Título de página-->
+      <div class="cards-responsive">
+        <div style="height: 20px; width: 100%;"></div>
+        <div class="row">
+          <%
+            var company
+            Contacts.forEach((contact, i)=>{
+              company=(contact.company=="") ? "No aplica" : contact.company;
+              date=new Date(contact.registerDate);
+              day=date.getDate();
+              month=date.getUTCMonth();
+              year=date.getUTCFullYear();
+          %>
+          <!--Card-->
+            <div class="col-sm-12 col-md-6">
+              <div class="card" style="background-color: rgba(41, 41, 41, 0.092); border: hidden;">
+                <!--Card body-->
+                <div class="card-body">
+                  <h4 class="card-title">
+                    <%= i+1 %>.- <%= contact.name %>
+                  </h4>
+                  <p class="card-text">
+                    <p class="card-text">
+                      <strong>Teléfono:</strong> <%= contact.phone %> <br>
+                      <strong>Correo:</strong> <%= contact.email %>
+                    </p>
+                    <p class="card-text">
+                      <strong>Empresa:</strong> <%= company %> <br>
+                      <strong>Fecha de solicitud:</strong> <%= day %> de <%= months[month] %> de <%= year %>
+                      <% 
+                        if(!Status){ 
+                          date=new Date(contact.attendanceDate);
+                          day=date.getDate();
+                          month=date.getUTCMonth();
+                          year=date.getUTCFullYear();
+                      %>
+                        <br><strong>Atendido:</strong> <%= day %> de <%= months[month] %> de <%= year %>
+                      <% } %>
+                    </p>
+                  </p>
+                  <div class="modal-button-container">
+                    <button type="button" class="btn my-button" data-bs-toggle="modal" data-bs-target="#modal<%= i %>">
+                      Ver detalles
+                    </button>
+                  </div>
+                </div>
+                <!--Card body-->
+                <!-- Triggered Modal -->
+                <div class="modal fade" id="modal<%= i %>" tabindex="-1" >
+                  <!--Modal card-->
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel">
+                          <%= i+1 %>.- <%= contact.name %>
+                        </h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <p class="card-text">
+                          <strong>Teléfono:</strong> <%= contact.phone %> <br>
+                          <strong>Correo:</strong> <%= contact.email %> <br>
+                          <strong>Empresa:</strong> <%= company %> <br>
+                          <strong>Estado:</strong> <%= contact.state %>
+                        </p>
+                        <p class="card-text">
+                          <strong>Canal de distribución:</strong> <%= contact.distributionChannel %> <br>
+                          <strong>Mensaje:</strong> <%= contact.text %>
+                        </p>
+                        <p class="card-text">
+                          <strong>Fecha de solicitud:</strong> <%= day %> de <%= months[month] %> de <%= year %> <br>
+                          <% 
+                            if(!Status){ 
+                              date=new Date(contact.attendanceDate);
+                              day=date.getUTCDate();
+                              month=date.getUTCMonth();
+                              year=date.getUTCFullYear();
+                          %>
+                            <strong>Atendido:</strong> <%= day %> de <%= months[month] %> de <%= year %>
+                          <% } %>
+                        </p>
+                        <p class="card-text">
+                          <strong>Familias y productos de interés:</strong>
+                          <%
+                            function productsList(position){
+                              contact.products[position].forEach((product, k)=>{
+                                if(k==contact.products[position].length-1) {
+                          %>
+                            <%= product %>
+                          <%    } else { %>
+                            <%= product %>,
+                          <%
+                                }
+                              })
+                            }
+                            contact.families.forEach((family, j)=>{ 
+                          %>
+                            <br><strong>⠀<%= j+1 %>.- <%= family %>:</strong>
+                          <%
+                              productsList(j)
+                            })
+                          %>
+                        </p>
+                      </div>
+                      <div class="modal-footer">
+                        <% if(!Status) { %>
+                          <a href="/contact/unmarkAsAttended/<%= contact._id %>" class="btn edit-btn"><i class="fa-solid fa-arrow-rotate-left"></i> Desmarcar</a>
+                        <% } else { %>
+                          <a href="/contact/markAsAttended/<%= contact._id %>" class="btn edit-btn"><i class="fa-solid fa-clipboard-check"></i> Atendido</a>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                  <!--Modal card-->
+                </div>
+                <!-- Triggered Modal -->
+              </div>
+              <div class="card-box"></div>
+            </div>
+          <!--Card-->
+          <% 
+            }); 
+          %>
+        </div>
+      </div>
+    </main>
+    <div style="height: 80px; width: 100%;"></div>
+    <!--Main-->
+  </div>
+</div>
+
+<%- include('templates/user/user_footer') %>

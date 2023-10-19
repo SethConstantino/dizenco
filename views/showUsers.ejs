@@ -1,0 +1,166 @@
+<%- include('templates/user/user_header') %>
+<%- include('templates/user/user_nav') %>
+<% var status = (Status) ? "activos" : "inactivos"; %>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="overflow: auto;">
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          <% if(Status) { %>
+            <li class="nav-item">
+              <a class="nav-link active" href="/user/showUsers"><i class="fa-solid fa-users"></i> <span class="menu-item">Usuarios activos</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href="/user/showUsersDeleted"><i class="fa-solid fa-user-large-slash"></i> <span class="menu-item">Usuarios inactivos</span></a>
+            </li>
+          <% } else { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/showUsers"><i class="fa-solid fa-users"></i> <span class="menu-item">Usuarios activos</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/user/showUsersDeleted"><i class="fa-solid fa-user-large-slash"></i> <span class="menu-item">Usuarios inactivos</span></a>
+            </li>
+          <% } %>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact/showContacts"><i class="fa-solid fa-user-plus"></i> <span class="menu-item">Nuevas solicitudes</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact/showContactsAttended"><i class="fa-solid fa-address-book"></i> <span class="menu-item">Lista de contactos</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/updateProfileInfo"><i class="fa-solid fa-key"></i> <span class="menu-item">Cambiar contraseña</span></a>
+          </li>
+        </ul>
+      </div>
+      <div style="height: 5.5rem; width: 100%;"></div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <h2 style="text-align: center; padding-top: 25px;">
+        <% if(Status) { %>
+          <a href="/user/newUser" style="color: #000;"><i class="fa-solid fa-circle-plus fa-xs"></i></a>
+        <% } %>
+        Usuarios <%= status %>
+      </h2>
+      <div class="cards-responsive">
+        <div style="height: 20px; width: 100%;"></div>
+        <% if(users.length==0 && Status==false) { %>
+          <div class="no-user-card-container" style="height: 100%;">
+            <div class="no-user-card card">
+              <div class="card-body">
+                <h5 class="card-title" style="text-align: center;">
+                    No hay usuarios inactivos
+                </h5>
+              </div>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="row">
+            <%
+              users.forEach((user, i)=>{
+            %>
+              <!--Card-->
+                <div class="col-sm-12 col-md-6">
+                  <div class="card" style="background-color: rgba(41, 41, 41, 0.092); border: hidden;">
+                    <div class="card-body">
+                      <h4 class="card-title" style="text-align: center;">
+                        <% if(user.role) { %>
+                          <i class="fa-solid fa-user-gear" style="color: #c20101;"></i>
+                        <% } else { %>
+                          <i class="fa-solid fa-user-large"></i>
+                        <% } %>
+                          <%= user.name %> <%= user.lastName %>
+                      </h4>
+                      <p class="card-text">
+                        <p class="card-text">
+                          <strong>Teléfono:</strong> <%= user.phone %> <br>
+                          <strong>Correo:</strong> <%= user.email %>
+                        </p>
+                        <p class="card-text">
+                          <strong>Objetivo:</strong> <%= user.objective %> <br>
+                          <% if(!Status) { %>
+                            <strong style="color: rgb(255, 0, 0);">*Nota:</strong> 
+                            <span style="color: rgb(148, 2, 2);">Al restaurar el usuario se establecerá "Dizenco" como contraseña temporal</span><br>
+                          <% } %>
+                        </p>
+                      </p>
+                      <div class="modal-button-container">
+                        <button type="button" class="btn my-button" data-bs-toggle="modal" data-bs-target="#modal<%= i %>">
+                          Ver detalles
+                        </button>
+                      </div>
+                    </div>
+                    <!-- Triggered Modal -->
+                    <div class="modal fade" id="modal<%= i %>" tabindex="-1" >
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                              <% if(user.role) { %>
+                                <i class="fa-solid fa-user-gear" style="color: #c20101;"></i>
+                              <% } else { %>
+                                <i class="fa-solid fa-user-large"></i>
+                              <% } %>
+                              <%= user.name %> <%= user.lastName %>
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p class="card-text">
+                              <% if(!Status) { %>
+                                <strong style="color: rgb(255, 0, 0);">*Nota:</strong> 
+                                <span style="color: rgb(148, 2, 2);">Al restaurar el usuario se establecerá "Dizenco" como contraseña temporal</span><br>
+                              <% } %>
+                              <strong>Teléfono:</strong> <%= user.phone %> <br>
+                              <strong>Correo:</strong> <%= user.email %>
+                            </p>
+                            <p class="card-text">
+                              <%
+                                date=new Date(user.birthDate);
+                                day=date.getUTCDate();
+                                month=date.getUTCMonth();
+                                year=date.getUTCFullYear();
+                              %>
+                              <strong>Fecha de nacimiento:</strong> <%= day %> de <%= months[month] %> de <%= year %> <br>
+                              <%
+                                date=new Date(user.admissionDate);
+                                day=date.getUTCDate();
+                                month=date.getUTCMonth();
+                                year=date.getUTCFullYear();
+                              %>
+                              <strong>Fecha de ingreso:</strong> <%= day %> de <%= months[month] %> de <%= year %>
+                            </p>
+                            <p class="card-text">
+                              <strong>Objetivo:</strong> <%= user.objective %>
+                            </p>
+                          </div>
+                          <div class="modal-footer">
+                            <% if(Status) { %>
+                              <a href="/user/updateUser/<%= user._id %>" class="btn edit-btn"><i class="fa-solid fa-user-pen"></i> Editar</a>
+                              <a href="/user/deleteUser/<%= user._id %>" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i> Eliminar</a>
+                            <% } else { %>
+                              <a href="/user/reactivateUser/<%= user._id %>" class="btn edit-btn"><i class="fa-solid fa-person-walking-arrow-loop-left"></i> Reactivar</a>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-box"></div>
+                </div>
+              <!--Card-->
+            <% 
+              }); 
+            %>
+          </div>
+        <%
+          }
+        %>
+      </div>
+    </main>
+    <div style="height: 80px; width: 100%;"></div>
+  </div>
+</div>
+
+<%- include('templates/user/user_footer') %>

@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Iniciar sesión - Dizenco</title>
+    <link rel="shortcut icon" href="/static/images/cropped-logo_dizenco_circle-192x192.png" type="image/x-icon">
+    <link href="/static/css/user/user_bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/user/user_dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+
+<header class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow" style="background-color: #c20101;">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="https://dizenco.com.mx/">
+      <img src="/static/images/dizenco_logo.png" alt="dizenco_logo.png">
+  </a>
+  <div class="sapace-box"></div>
+</header>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <main>
+      <h2 style="text-align: center; padding-top: 25px;">
+        Iniciar sesión
+      </h2>
+      <div class="cards-responsive">
+        <% 
+          if(error.length>0) {
+            error.forEach((text)=>{
+        %>
+          <div class="row edited-form" style="height: auto; margin-top: 40px; margin-bottom: 0;">
+            <div class="col-md-6 col-sm-12">
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <%= text %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            </div>
+          </div>
+        <% 
+            });
+          } 
+        %>
+        <!---->
+        <div class="row edited-form" style="height: 100%;">
+          <div class="col-md-5 col-sm-12">
+            <!---->
+            <div class="card" style="border: none;">
+              <div class="card-body">
+                <form class="card-body" method="post" action="/login">
+                <!--Row 1-->
+                  <div class="row">
+                    <div class="col-12">
+                      <label class="form-label"><strong>Correo</strong></label>
+                      <input type="email" class="form-control form-input" name="email" placeholder="correo@ejemplo.com" required>
+                    </div>
+                  </div>
+                <!--Row 1-->
+                <!--Row 2-->
+                  <div class="row">
+                    <div class="col-12" style="margin-top: 25px;">
+                        <label class="form-label"><strong>Contraseña</strong></label>
+                        <input type="password" class="form-control form-input" name="password" placeholder="Contraseña" required>
+                    </div>
+                  </div>
+                <!--Row 2-->
+                  
+                  <div class="modal-button-container" style="margin-top: 30px;">
+                    <button type="submit" class="btn my-button" style="width: 150px;"> Iniciar sesión </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!---->
+          </div>
+        </div>
+        <!---->
+      </div>
+      <div style="height: 80px; width: 100%;"></div>
+    </main>
+  </div>
+</div>
+
+<%- include('templates/user/user_footer') %>

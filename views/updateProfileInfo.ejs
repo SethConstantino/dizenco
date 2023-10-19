@@ -1,0 +1,87 @@
+<%- include('templates/user/user_header') %>
+<%- include('templates/user/user_nav') %>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="overflow: auto;">
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          <% if(Role) { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/showUsers"><i class="fa-solid fa-users"></i> <span class="menu-item">Usuarios activos</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/showUsersDeleted"><i class="fa-solid fa-user-large-slash"></i> <span class="menu-item">Usuarios inactivos</span></a>
+            </li>
+          <% } %>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact/showContacts"><i class="fa-solid fa-user-plus"></i> <span class="menu-item">Nuevas solicitudes</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="/contact/showContactsAttended"><i class="fa-solid fa-address-book"></i> <span class="menu-item">Lista de contactos</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/user/updateProfileInfo"><i class="fa-solid fa-key"></i> <span class="menu-item">Cambiar contraseña</span></a>
+          </li>
+        </ul>
+      </div>
+      <div style="height: 5.5rem; width: 100%;"></div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <h2 style="text-align: center; padding-top: 25px;">
+        Cambiar contraseña
+      </h2>
+      <div class="cards-responsive">
+        <% 
+          if(error.length>0) {
+            error.forEach((text)=>{
+        %>
+          <div class="row edited-form" style="height: auto; margin-top: 40px; margin-bottom: 0;">
+            <div class="col-md-6 col-sm-12">
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <%= text %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            </div>
+          </div>
+        <% 
+            });
+          } 
+        %>
+        <div style="height: 20px; width: 100%;"></div>
+        <div class="row edited-form">
+          <div class="col-md-6 col-sm-8">
+            <!---->
+            <div class="card" style="background: rgba(61, 59, 59, 0.081); border: none;">
+              <div class="card-body">
+                <form class="card-body" method="post" action="/user/updateProfilePassword">
+                  <div class="col-12">
+                      <!--<label class="form-label">Contraseña actual</label>-->
+                      <input type="password" class="form-control form-input" name="oldPassword" placeholder="Contraseña actual" required>
+                  </div>
+                  <div class="col-12" style="margin-top: 25px;">
+                      <!--<label class="form-label">Nueva contraseña</label>-->
+                      <input type="password" class="form-control form-input" name="newPassword" placeholder="Nueva contraseña" required>
+                      <div class="form-text" style="margin-left: 10px; margin-top: 5px;">
+                        La contraseña debe tener de 5 a 8 caracteres.
+                      </div>
+                  </div>
+                  <div class="modal-button-container" style="margin-top: 30px;">
+                    <button type="submit" class="btn my-button">
+                      Guardar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!---->
+          </div>
+        </div>
+      </div>
+      <div style="height: 80px; width: 100%;"></div>
+    </main>
+  </div>
+</div>
+
+<%- include('templates/user/user_footer') %>

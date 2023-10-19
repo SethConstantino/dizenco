@@ -1,0 +1,25 @@
+{
+  "name": "dizenco-app",
+  "version": "1.0.0",
+  "description": "Aplicación web con inicio de sesión para revisión de posibles clientes almacenados en una nube.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Seth Jair Arturo Constantino Medina, Tel: 427 275 7479, Email: arturo.seth.99@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
+    "enigma-code": "^0.0.11",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "mongoose": "^6.4.0",
+    "nodemon": "^2.0.18"
+  }
+}
+
+
